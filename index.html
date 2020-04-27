@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <title>Buzzer Quiz</title>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <script src="vue-2.5.16.min.js"></script>
+    <script src="problems.js"></script>
+    <script src="romaji.js"></script>
+    <style>.error { color: gainsboro; } .correct { color: blue; }</style>
+  </head>
+
+  <body class="container">
+    <div id="app">
+
+      <div v-if="state === STATES.INTRO">
+        <p>クイズだよー</p>
+        <ul>
+          <li>答えられそうなところで Space を押すと問題文が止まるよ</li>
+          <li>正解すると押しポイントに応じて 100 ~ 200 点が入るよ</li>
+          <li>キーボードで答えを入力してね。漢字変換、大文字小文字の区別、スペースや記号などはいらないよ</li>
+          <li>タイピングスピードはスコアに関係ないよ、タイプミスは誤答なので慎重にね</li>
+          <li>原則ローマ字入力だけど、英語表記が一般的な団体名などを答える問題や、英単語を訊く問題ではそのまま英語で回答しても正解だよ</li>
+          <li>外国人の名前はラストネームだけでも正解だよ。日本人の名前はフルネームでね</li>
+        </ul>
+        <p>[Space] でスタート</p>
+        <hr />
+        <p>問題出典: https://booth.pm/ja/items/1918432</p>
+      </div>
+
+      <div v-if="state === STATES.READING">
+        <p>正: {{ correct }}, 誤: {{ error }}, 残: {{ PROBLEMS.length - correct - error }}</p>
+        <hr />
+        <p>もんだい: {{ displayedProblem }}</p>
+        <p>[Space] で回答開始</p>
+      </div>
+
+      <div v-if="state === STATES.INPUT">
+        <p>正: {{ correct }}, 誤: {{ error }}, 残: {{ PROBLEMS.length - correct - error }}</p>
+        <hr />
+        <p>もんだい: {{ displayedProblem }}</p>
+        <p :class="{ error: alphaError }">
+          アルファベット: {{ alphaInput }}
+        </p>
+        <p :class="{ error: kanaError }">
+          ローマ字: {{ kanaInput }}{{ pendingInput }}
+        </p>
+        <p>timer: {{ inputTimer }}</p>
+      </div>
+
+      <div v-if="state === STATES.CORRECT">
+        <p>正: {{ correct }}, 誤: {{ error }}, 残: {{ PROBLEMS.length - correct - error }}</p>
+        <hr />
+        <p>もんだい: {{ displayedProblem }}</p>
+        <p :class="{ error: !alphaCorrect, correct: alphaCorrect }">
+          アルファベット: {{ alphaInput }}
+        </p>
+        <p :class="{ error: !kanaCorrect, correct: kanaCorrect }">
+          ローマ字: {{ kanaInput }}{{ pendingInput }}
+        </p>
+        <p>正解: {{ PROBLEMS[problemId].displayAnswer }}</p>
+        <p>{{ PROBLEMS[problemId].explanation }}</p>
+        <p>[Space] で次へ</p>
+      </div>
+
+      <div v-if="state === STATES.ERROR">
+        <p>正: {{ correct }}, 誤: {{ error }}, 残: {{ PROBLEMS.length - correct - error }}</p>
+        <hr />
+        <p>もんだい: {{ displayedProblem }}</p>
+        <p class="error">
+          アルファベット: {{ alphaInput }}
+        </p>
+        <p class="error">
+          ローマ字: {{ kanaInput }}{{ pendingInput }}
+        </p>
+        <p>正解: {{ PROBLEMS[problemId].displayAnswer }}</p>
+        <p>{{ PROBLEMS[problemId].explanation }}</p>
+        <p>[Space] で次へ</p>
+      </div>
+
+      <div v-if="state === STATES.RESULT">
+        <p>おわり</p>
+        <p>[Space] で最初に戻る</p>
+      </div>
+
+      <div v-if="state > STATES.INTRO">
+        <hr />
+        <p>スコア {{ score }} <span v-if="scoreDiff" class="correct">(+ {{ scoreDiff }})</span></p>
+      </div>
+
+    </div>
+
+    <script src="main.js"></script>
+  </body>
+
+</html>
