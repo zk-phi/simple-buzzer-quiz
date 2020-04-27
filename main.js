@@ -92,6 +92,7 @@ var vm = new Vue({
                             this.kanaCorrect = true;
                         }
                     } else {
+                        this.pendingInput += key;
                         this.kanaError = true;
                     }
                 }
