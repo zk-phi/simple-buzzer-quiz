@@ -8,21 +8,39 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="vue-2.5.16.min.js"></script>
     <script src="romaji.js"></script>
-    <style>.error { color: gainsboro; } .correct { color: blue; }</style>
+    <style>
+.error {
+  color: gainsboro;
+}
+
+.correct {
+  color: blue;
+}
+
+.problem {
+  padding: 0.5em;
+  border: 1px solid black;
+}
+    </style>
   </head>
 
   <body class="container">
     <div id="app">
 
       <div v-if="state === STATES.INTRO">
-        <p>クイズだよー</p>
+        <h2>クイズだよー</h2>
+        <h3>ルール</h3>
         <ul>
-          <li>答えられそうなところで Space を押すと問題文が止まるよ</li>
-          <li>正解すると押しポイントに応じて 100 ~ 200 点が入るよ</li>
+          <li>わかりそうなところで Space を押すと問題文が止まるよ</li>
+          <li>シンキングタイムは５秒だよ、止めて５秒以内に思い出せなかったら誤答だよ</li>
+          <li>早く止めて正解するほど高得点 (100 ~ 200) がもらえるよ</li>
+        </ul>
+        <h3>操作</h3>
+        <ul>
           <li>キーボードで答えを入力してね。漢字変換、大文字小文字の区別、スペースや記号などはいらないよ</li>
-          <li>タイピングスピードはスコアに関係ないよ、タイプミスは誤答なので慎重にね</li>
-          <li>原則ローマ字入力だけど、英語表記が一般的な団体名などを答える問題や、英単語を訊く問題ではそのまま英語で回答しても正解だよ</li>
+          <li>タイピング速度はスコアに関係ないから、タイプミスしないように慎重にね</li>
           <li>外国人の名前はラストネームだけでも正解だよ。日本人の名前はフルネームでね</li>
+          <li>表記揺れ (テレビとテレヴィなど) はなるべく正解になるように頑張っているよ</li>
         </ul>
         <p v-if="problems">[Space] でスタート</p>
         <p v-else-if="loadError">問題の読み込みに失敗しました</p>
@@ -31,65 +49,61 @@
         <p v-if="problems">{{ problems.author.text }}</p>
       </div>
 
-
       <div v-if="state === STATES.READING">
-        <p>正: {{ correct }}, 誤: {{ error }}, 残: {{ problems.problems.length - correct - error }}</p>
-        <hr />
-        <p>もんだい: {{ displayedProblem }}</p>
+        <h2>問題 ({{ problemId + 1 }}/{{ problems.problems.length }})</h2>
+        <p>スコア {{ score }} <span v-if="scoreDiff" class="correct">(+ {{ scoreDiff }})</span></p>
+        <p class="problem">{{ displayedProblem }}</p>
         <p>[Space] で回答開始</p>
       </div>
 
       <div v-if="state === STATES.INPUT">
-        <p>正: {{ correct }}, 誤: {{ error }}, 残: {{ problems.problems.length - correct - error }}</p>
-        <hr />
-        <p>もんだい: {{ displayedProblem }}</p>
+        <h2>問題 ({{ problemId + 1 }}/{{ problems.problems.length }})</h2>
+        <p>スコア {{ score }}</p>
+        <p class="problem">{{ displayedProblem }}</p>
+        <p>timer: {{ inputTimer }}</p>
         <p :class="{ error: alphaError }">
-          アルファベット: {{ alphaInput }}
+          アルファベット: {{ alphaInput }}|
         </p>
         <p :class="{ error: kanaError }">
-          ローマ字: {{ kanaInput }}{{ pendingInput }}
+          ローマ字: {{ kanaInput }}{{ pendingInput }}|
         </p>
-        <p>timer: {{ inputTimer }}</p>
       </div>
 
       <div v-if="state === STATES.CORRECT">
-        <p>正: {{ correct }}, 誤: {{ error }}, 残: {{ problems.problems.length - correct - error }}</p>
-        <hr />
-        <p>もんだい: {{ displayedProblem }}</p>
+        <h2>問題 ({{ problemId + 1 }}/{{ problems.problems.length }})</h2>
+        <p>スコア {{ score }} <span v-if="scoreDiff" class="correct">(+{{ scoreDiff }})</span></p>
+        <p class="problem">{{ displayedProblem }}</p>
+        <p>timer: {{ inputTimer }}</p>
         <p :class="{ error: !alphaCorrect, correct: alphaCorrect }">
           アルファベット: {{ alphaInput }}
         </p>
         <p :class="{ error: !kanaCorrect, correct: kanaCorrect }">
           ローマ字: {{ kanaInput }}{{ pendingInput }}
         </p>
-        <p>正解: {{ problems.problems[problemId].displayAnswer }}</p>
-        <p>{{ problems.problems[problemId].explanation }}</p>
+        <p>⭕{{ problems.problems[problemId].displayAnswer }}</p>
+        <small>{{ problems.problems[problemId].explanation }}</small>
         <p>[Space] で次へ</p>
       </div>
 
       <div v-if="state === STATES.ERROR">
-        <p>正: {{ correct }}, 誤: {{ error }}, 残: {{ problems.problems.length - correct - error }}</p>
-        <hr />
-        <p>もんだい: {{ displayedProblem }}</p>
+        <h2>問題 ({{ problemId + 1 }}/{{ problems.problems.length - problemId - 1 }})</h2>
+        <p>スコア {{ score }}</p>
+        <p class="problem">{{ displayedProblem }}</p>
+        <p>timer: {{ inputTimer }}</p>
         <p class="error">
           アルファベット: {{ alphaInput }}
         </p>
         <p class="error">
           ローマ字: {{ kanaInput }}{{ pendingInput }}
         </p>
-        <p>正解: {{ problems.problems[problemId].displayAnswer }}</p>
-        <p>{{ problems.problems[problemId].explanation }}</p>
+        <p>❌{{ problems.problems[problemId].displayAnswer }}</p>
+        <small>{{ problems.problems[problemId].explanation }}</small>
         <p>[Space] で次へ</p>
       </div>
 
       <div v-if="state === STATES.RESULT">
         <p>おわり</p>
         <p>[Space] で最初に戻る</p>
-      </div>
-
-      <div v-if="state > STATES.INTRO">
-        <hr />
-        <p>スコア {{ score }} <span v-if="scoreDiff" class="correct">(+ {{ scoreDiff }})</span></p>
       </div>
 
     </div>

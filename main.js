@@ -15,8 +15,6 @@ var vm = new Vue({
     data: {
         /* game */
         state: STATES.INTRO,
-        correct: 0,
-        error: 0,
         score: 0,
         scoreDiff: 0,
         problems: null,
@@ -50,7 +48,7 @@ var vm = new Vue({
     methods: {
         initGame: function () {
             this.state = STATES.INTRO;
-            this.correct = this.error = this.score = 0;
+            this.score = 0;
         },
         initProblem: function (problemId) {
             this.state = STATES.READING;
@@ -65,14 +63,12 @@ var vm = new Vue({
             var total = this.problems.problems[this.problemId].body.length;
             var pending = this.pendingProblem.length;
             var diff = 100 + Math.floor(pending / total * 100);
-            this.correct += 1;
             this.score += diff;
             this.scoreDiff = diff;
             this.displayedProblem += this.pendingProblem;
             this.state = STATES.CORRECT;
         },
         inputError: function () {
-            this.error += 1;
             this.scoreDiff = 0;
             this.displayedProblem += this.pendingProblem;
             this.state = STATES.ERROR;
