@@ -19,7 +19,7 @@ var vm = new Vue({
         error: 0,
         score: 0,
         scoreDiff: 0,
-        loadCompleted: false,
+        problems: null,
         loadError: false,
         /* problem */
         problemId: null,
@@ -39,14 +39,13 @@ var vm = new Vue({
         this.keyListenerObj = function (e) { vm.keyDown(e.key) };
         this.timerObj = setInterval(this.tick, TICK_INTERVAL);
         window.addEventListener('keydown', this.keyListenerObj);
-        // ---- load problems.js
-        var script = document.createElement("script");
-        var match  = location.href.match(/\?(.+)$/);
-        script.type = "text\/javascript";
-        script.src = match ? match[1] : "problems.js";
-        script.onerror = function () { vm.loadError = true; };
-        script.onload = function () { vm.loadCompleted = true; };
-        document.currentScript.parentNode.insertBefore(script, document.currentScript);
+        // ---- load problems.json
+        var match = location.href.match(/\?(.+)$/);
+        var xhr   = new XMLHttpRequest();
+        xhr.onload = function () { vm.problems = JSON.parse(xhr.responseText); };
+        xhr.onerror = function () { vm.loadError = true; };
+        xhr.open("GET", match ? match[1] : "problems.json", true);
+        xhr.send(null);
     },
     methods: {
         initGame: function () {
@@ -57,13 +56,13 @@ var vm = new Vue({
             this.state = STATES.READING;
             this.problemId = problemId;
             this.displayedProblem = "";
-            this.pendingProblem = PROBLEMS[problemId].body;
+            this.pendingProblem = this.problems.problems[problemId].body;
             this.kanaInput = this.alphaInput = this.pendingInput = "";
             this.alphaError = this.kanaError = this.alphaCorrect = this.kanaCorrect = false;
             this.inputTimer = INPUT_TIMER;
         },
         inputCorrect: function () {
-            var total = PROBLEMS[this.problemId].body.length;
+            var total = this.problems.problems[this.problemId].body.length;
             var pending = this.pendingProblem.length;
             var diff = 100 + Math.floor(pending / total * 100);
             this.correct += 1;
@@ -97,13 +96,13 @@ var vm = new Vue({
                         this.kanaInput = this.kanaInput.concat(v[0]);
                         this.pendingInput = v[1];
                         this.inputTimer = INPUT_TIMER;
-                        var kanaIsValid = PROBLEMS[this.problemId].answers.some(function (ans) {
+                        var kanaIsValid = this.problems.problems[this.problemId].answers.some(function (ans) {
                             return ans.match("^" + vm.kanaInput);
                         });
                         if (!kanaIsValid) {
                             this.kanaError = true;
                         }
-                        var kanaIsCorrect = PROBLEMS[this.problemId].answers.some(function (ans) {
+                        var kanaIsCorrect = this.problems.problems[this.problemId].answers.some(function (ans) {
                             return ans === vm.kanaInput;
                         });
                         if (kanaIsCorrect) {
@@ -118,13 +117,13 @@ var vm = new Vue({
                 if (!this.alphaError && key.match(/^[0-9a-z]$/)) {
                     this.alphaInput = this.alphaInput.concat(key);
                     this.inputTimer = INPUT_TIMER;
-                    var alphaIsValid = PROBLEMS[this.problemId].answers.some(function (ans) {
+                    var alphaIsValid = this.problems.problems[this.problemId].answers.some(function (ans) {
                         return ans.match("^" + vm.alphaInput);
                     });
                     if (!alphaIsValid) {
                         this.alphaError = true;
                     }
-                    var alphaIsCorrect = PROBLEMS[this.problemId].answers.some(function (ans) {
+                    var alphaIsCorrect = this.problems.problems[this.problemId].answers.some(function (ans) {
                         return ans === vm.alphaInput;
                     });
                     if (alphaIsCorrect) {
@@ -139,7 +138,7 @@ var vm = new Vue({
             }
             if ((this.state === STATES.ERROR || this.state === STATES.CORRECT) && key === " ") {
                 this.scoreDiff = 0;
-                if (this.problemId + 1 < PROBLEMS.length) {
+                if (this.problemId + 1 < this.problems.problems.length) {
                     this.initProblem(this.problemId + 1);
                 } else {
                     this.state = STATES.RESULT;

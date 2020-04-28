@@ -24,23 +24,23 @@
           <li>原則ローマ字入力だけど、英語表記が一般的な団体名などを答える問題や、英単語を訊く問題ではそのまま英語で回答しても正解だよ</li>
           <li>外国人の名前はラストネームだけでも正解だよ。日本人の名前はフルネームでね</li>
         </ul>
-        <p v-if="loadCompleted">[Space] でスタート</p>
+        <p v-if="problems">[Space] でスタート</p>
         <p v-else-if="loadError">問題の読み込みに失敗しました</p>
         <p v-else>問題を読み込み中です ...</p>
         <hr />
-        <p v-if="loadCompleted">{{ PROBLEMS_AUTHOR }}</p>
+        <p v-if="problems">{{ problems.author.text }}</p>
       </div>
 
 
       <div v-if="state === STATES.READING">
-        <p>正: {{ correct }}, 誤: {{ error }}, 残: {{ PROBLEMS.length - correct - error }}</p>
+        <p>正: {{ correct }}, 誤: {{ error }}, 残: {{ problems.problems.length - correct - error }}</p>
         <hr />
         <p>もんだい: {{ displayedProblem }}</p>
         <p>[Space] で回答開始</p>
       </div>
 
       <div v-if="state === STATES.INPUT">
-        <p>正: {{ correct }}, 誤: {{ error }}, 残: {{ PROBLEMS.length - correct - error }}</p>
+        <p>正: {{ correct }}, 誤: {{ error }}, 残: {{ problems.problems.length - correct - error }}</p>
         <hr />
         <p>もんだい: {{ displayedProblem }}</p>
         <p :class="{ error: alphaError }">
@@ -53,7 +53,7 @@
       </div>
 
       <div v-if="state === STATES.CORRECT">
-        <p>正: {{ correct }}, 誤: {{ error }}, 残: {{ PROBLEMS.length - correct - error }}</p>
+        <p>正: {{ correct }}, 誤: {{ error }}, 残: {{ problems.problems.length - correct - error }}</p>
         <hr />
         <p>もんだい: {{ displayedProblem }}</p>
         <p :class="{ error: !alphaCorrect, correct: alphaCorrect }">
@@ -62,13 +62,13 @@
         <p :class="{ error: !kanaCorrect, correct: kanaCorrect }">
           ローマ字: {{ kanaInput }}{{ pendingInput }}
         </p>
-        <p>正解: {{ PROBLEMS[problemId].displayAnswer }}</p>
-        <p>{{ PROBLEMS[problemId].explanation }}</p>
+        <p>正解: {{ problems.problems[problemId].displayAnswer }}</p>
+        <p>{{ problems.problems[problemId].explanation }}</p>
         <p>[Space] で次へ</p>
       </div>
 
       <div v-if="state === STATES.ERROR">
-        <p>正: {{ correct }}, 誤: {{ error }}, 残: {{ PROBLEMS.length - correct - error }}</p>
+        <p>正: {{ correct }}, 誤: {{ error }}, 残: {{ problems.problems.length - correct - error }}</p>
         <hr />
         <p>もんだい: {{ displayedProblem }}</p>
         <p class="error">
@@ -77,8 +77,8 @@
         <p class="error">
           ローマ字: {{ kanaInput }}{{ pendingInput }}
         </p>
-        <p>正解: {{ PROBLEMS[problemId].displayAnswer }}</p>
-        <p>{{ PROBLEMS[problemId].explanation }}</p>
+        <p>正解: {{ problems.problems[problemId].displayAnswer }}</p>
+        <p>{{ problems.problems[problemId].explanation }}</p>
         <p>[Space] で次へ</p>
       </div>
 
