@@ -7,7 +7,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <script src="vue-2.5.16.min.js"></script>
-    <script src="problems.js"></script>
     <script src="romaji.js"></script>
     <style>.error { color: gainsboro; } .correct { color: blue; }</style>
   </head>
@@ -25,10 +24,13 @@
           <li>原則ローマ字入力だけど、英語表記が一般的な団体名などを答える問題や、英単語を訊く問題ではそのまま英語で回答しても正解だよ</li>
           <li>外国人の名前はラストネームだけでも正解だよ。日本人の名前はフルネームでね</li>
         </ul>
-        <p>[Space] でスタート</p>
+        <p v-if="loadCompleted">[Space] でスタート</p>
+        <p v-else-if="loadError">問題の読み込みに失敗しました</p>
+        <p v-else>問題を読み込み中です ...</p>
         <hr />
-        <p>問題出典: https://booth.pm/ja/items/1918432</p>
+        <p v-if="loadCompleted">{{ PROBLEMS_AUTHOR }}</p>
       </div>
+
 
       <div v-if="state === STATES.READING">
         <p>正: {{ correct }}, 誤: {{ error }}, 残: {{ PROBLEMS.length - correct - error }}</p>

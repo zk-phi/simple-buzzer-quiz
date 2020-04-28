@@ -19,6 +19,8 @@ var vm = new Vue({
         error: 0,
         score: 0,
         scoreDiff: 0,
+        loadCompleted: false,
+        loadError: false,
         /* problem */
         problemId: null,
         displayedProblem: null,
@@ -37,6 +39,14 @@ var vm = new Vue({
         this.keyListenerObj = function (e) { vm.keyDown(e.key) };
         this.timerObj = setInterval(this.tick, TICK_INTERVAL);
         window.addEventListener('keydown', this.keyListenerObj);
+        // ---- load problems.js
+        var script = document.createElement("script");
+        var match  = location.href.match(/\?(.+)$/);
+        script.type = "text\/javascript";
+        script.src = match ? match[1] : "problems.js";
+        script.onerror = function () { vm.loadError = true; };
+        script.onload = function () { vm.loadCompleted = true; };
+        document.currentScript.parentNode.insertBefore(script, document.currentScript);
     },
     methods: {
         initGame: function () {

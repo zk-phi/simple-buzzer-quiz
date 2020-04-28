@@ -1,3 +1,5 @@
+var PROBLEMS_AUTHOR = "出典: https://booth.pm/ja/items/1918432";
+
 var PROBLEMS = [
     {
         body: "捕食の時にはバッカルコーンと呼ばれる触手を伸ばす、その神秘的な姿から「流氷の天使」と呼ばれる海の生き物は何でしょう?",
