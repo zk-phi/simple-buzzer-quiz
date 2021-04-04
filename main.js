@@ -16,7 +16,8 @@ var vm = new Vue({
         /* game */
         state: STATES.INTRO,
         score: 0,
-        scoreDiff: 0,
+        correctCount: 0,
+        scoreDiff: 200,
         problems: null,
         loadError: false,
         /* problem */
@@ -42,35 +43,38 @@ var vm = new Vue({
         var xhr   = new XMLHttpRequest();
         xhr.onload = function () { vm.problems = JSON.parse(xhr.responseText); };
         xhr.onerror = function () { vm.loadError = true; };
-        xhr.open("GET", match ? match[1] : "problems.json", true);
+        xhr.open("GET", match ? `https://${match[1]}` : "problems.json", true);
         xhr.send(null);
+    },
+    computed: {
+        shareText: function () {
+            return this.problems.title + "で" + this.score + "点" +
+                   "(正答数" + this.correctCount + "/" + this.problems.problems.length + ")" +
+                   "を獲得しました！ " + location.href;
+        },
     },
     methods: {
         initGame: function () {
             this.state = STATES.INTRO;
             this.score = 0;
+            this.correctCount = 0;
         },
         initProblem: function (problemId) {
             this.state = STATES.READING;
             this.problemId = problemId;
+            this.scoreDiff = 200;
             this.displayedProblem = "";
-            this.pendingProblem = this.problems.problems[problemId].body;
+            this.pendingProblem = "問題：" + this.problems.problems[problemId].body.normalize();
             this.kanaInput = this.alphaInput = this.pendingInput = "";
             this.alphaError = this.kanaError = this.alphaCorrect = this.kanaCorrect = false;
             this.inputTimer = INPUT_TIMER;
         },
         inputCorrect: function () {
-            var total = this.problems.problems[this.problemId].body.length;
-            var pending = this.pendingProblem.length;
-            var diff = 100 + Math.floor(pending / total * 100);
-            this.score += diff;
-            this.scoreDiff = diff;
-            this.displayedProblem += this.pendingProblem;
+            this.score += this.scoreDiff;
+            this.correctCount += 1;
             this.state = STATES.CORRECT;
         },
         inputError: function () {
-            this.scoreDiff = 0;
-            this.displayedProblem += this.pendingProblem;
             this.state = STATES.ERROR;
         },
         keyDown: function (key) {
@@ -80,9 +84,6 @@ var vm = new Vue({
             }
             if (this.state === STATES.READING && key === " ") {
                 this.state = STATES.INPUT;
-                if (this.pendingProblem) {
-                    this.displayedProblem += "/";
-                }
                 return;
             }
             if (this.state === STATES.INPUT) {
@@ -133,7 +134,6 @@ var vm = new Vue({
                 return;
             }
             if ((this.state === STATES.ERROR || this.state === STATES.CORRECT) && key === " ") {
-                this.scoreDiff = 0;
                 if (this.problemId + 1 < this.problems.problems.length) {
                     this.initProblem(this.problemId + 1);
                 } else {
@@ -151,6 +151,8 @@ var vm = new Vue({
                 if (this.pendingProblem) {
                     this.displayedProblem = this.displayedProblem + this.pendingProblem[0];
                     this.pendingProblem = this.pendingProblem.slice(1);
+                    var total = this.problems.problems[this.problemId].body.length;
+                    this.scoreDiff = 100 + Math.floor(this.pendingProblem.length / total * 100);
                 } else {
                     this.state = STATES.INPUT;
                 }

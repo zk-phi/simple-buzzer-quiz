@@ -2,19 +2,23 @@
 <html>
 
   <head>
-    <title>Buzzer Quiz</title>
+    <title>早押し検定</title>
     <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="早押しクイズができます" />
     <script src="vue-2.5.16.min.js"></script>
     <script src="romaji.js"></script>
+    <link rel="stylesheet" href="new.min.css">
     <style>
-.error {
+.diminished {
   color: gainsboro;
 }
 
 .correct {
   color: blue;
+}
+
+.hidden {
+  color: rgba(0, 0, 0, 0);
 }
 
 .problem {
@@ -24,86 +28,114 @@
     </style>
   </head>
 
-  <body class="container">
+  <body>
     <div id="app">
 
+      <header>
+        <h1>
+          早押し検定
+          <span v-if="problems">"{{ problems.title }}"</span>
+        </h1>
+        <p>
+          作問:
+          <a target="_blank" :href="problems.author.url">{{ problems.author.text }}</a>
+          / プログラム:
+          <a target="_blank" href="https://zk-phi.github.io/">zk-phi</a>
+        </p>
+      </header>
+
       <div v-if="state === STATES.INTRO">
-        <h2>クイズだよー</h2>
-        <h3>ルール</h3>
+        <h3>遊びかた</h3>
         <ul>
-          <li>わかりそうなところで Space を押すと問題文が止まるよ</li>
-          <li>シンキングタイムは５秒だよ、止めて５秒以内に思い出せなかったら誤答だよ</li>
-          <li>早く止めて正解するほど高得点 (100 ~ 200) がもらえるよ</li>
+          <li>わかりそうなところで [Space] を押すと問題文が止まります</li>
+          <li>止めてからのシンキングタイムは５秒です</li>
+          <li>早く止めて正解するほど高得点 (100 ~ 200) がもらえます</li>
         </ul>
         <h3>操作</h3>
         <ul>
-          <li>キーボードで答えを入力してね。漢字変換、大文字小文字の区別、スペースや記号などはいらないよ</li>
-          <li>タイピング速度はスコアに関係ないから、タイプミスしないように慎重にね</li>
-          <li>外国人の名前はラストネームだけでも正解だよ。日本人の名前はフルネームでね</li>
-          <li>表記揺れ (テレビとテレヴィなど) はなるべく正解になるように頑張っているよ</li>
+          <li>キーボードで答えを入力してください</li>
+          <li>漢字変換は不要です</li>
+          <li>タイピング速度はスコアに関係ないので、タイプミスしないように落ち着いて入力してください</li>
+          <li>外国人の名前はラストネームだけでも正解です</li>
+          <li>表記揺れ (テレビとテレヴィなど) はなるべくどっちでも正解になるようにしています</li>
         </ul>
+        <hr />
         <p v-if="problems">[Space] でスタート</p>
         <p v-else-if="loadError">問題の読み込みに失敗しました</p>
         <p v-else>問題を読み込み中です ...</p>
-        <hr />
-        <p v-if="problems">{{ problems.author.text }}</p>
       </div>
 
       <div v-if="state === STATES.READING">
         <h2>問題 ({{ problemId + 1 }}/{{ problems.problems.length }})</h2>
-        <p>スコア {{ score }} <span v-if="scoreDiff" class="correct">(+ {{ scoreDiff }})</span></p>
-        <p class="problem">{{ displayedProblem }}</p>
+        <p>現在スコア {{ score }} <span v-if="scoreDiff">(+ {{ scoreDiff }})</span></p>
+        <blockquote>
+          {{ displayedProblem }}<span class="hidden">/{{ pendingProblem }}</span>
+        </blockquote>
+        <hr />
         <p>[Space] で回答開始</p>
       </div>
 
       <div v-if="state === STATES.INPUT">
         <h2>問題 ({{ problemId + 1 }}/{{ problems.problems.length }})</h2>
-        <p>スコア {{ score }}</p>
-        <p class="problem">{{ displayedProblem }}</p>
-        <p>timer: {{ inputTimer }}</p>
-        <p :class="{ error: alphaError }">
+        <p>現在スコア {{ score }} <span v-if="scoreDiff">(+ {{ scoreDiff }})</span></p>
+        <blockquote>
+          {{ displayedProblem }}/<span class="hidden">{{ pendingProblem }}</span>
+        </blockquote>
+        <p>シンキングタイム: {{ inputTimer }}</p>
+        <p :class="{ diminished: alphaError }">
           アルファベット: {{ alphaInput }}|
         </p>
-        <p :class="{ error: kanaError }">
-          ローマ字: {{ kanaInput }}{{ pendingInput }}|
+        <p :class="{ diminished: kanaError }">
+          かな: {{ kanaInput }}{{ pendingInput }}|
         </p>
+        <hr />
+        <p>キーボードで回答を入力</p>
       </div>
 
       <div v-if="state === STATES.CORRECT">
         <h2>問題 ({{ problemId + 1 }}/{{ problems.problems.length }})</h2>
-        <p>スコア {{ score }} <span v-if="scoreDiff" class="correct">(+{{ scoreDiff }})</span></p>
-        <p class="problem">{{ displayedProblem }}</p>
-        <p>timer: {{ inputTimer }}</p>
-        <p :class="{ error: !alphaCorrect, correct: alphaCorrect }">
+        <p>現在スコア {{ score }} <span v-if="scoreDiff" class="correct">(+{{ scoreDiff }})</span></p>
+        <blockquote>{{ displayedProblem }}/{{ pendingProblem }}</blockquote>
+        <p class="diminished">シンキングタイム: {{ inputTimer }}</p>
+        <p :class="{ diminished: !alphaCorrect, correct: alphaCorrect }">
           アルファベット: {{ alphaInput }}
+          {{ alphaCorrect ? "⭕" : "" }}
         </p>
-        <p :class="{ error: !kanaCorrect, correct: kanaCorrect }">
-          ローマ字: {{ kanaInput }}{{ pendingInput }}
+        <p :class="{ diminished: !kanaCorrect, correct: kanaCorrect }">
+          かな: {{ kanaInput }}{{ pendingInput }}
+          {{ kanaCorrect ? "⭕" : "" }}
         </p>
-        <p>⭕{{ problems.problems[problemId].displayAnswer }}</p>
-        <small>{{ problems.problems[problemId].explanation }}</small>
+        <p>A. {{ problems.problems[problemId].displayAnswer }}</p>
+        <p><small>{{ problems.problems[problemId].explanation }}</small></p>
+        <hr />
         <p>[Space] で次へ</p>
       </div>
 
       <div v-if="state === STATES.ERROR">
         <h2>問題 ({{ problemId + 1 }}/{{ problems.problems.length }})</h2>
-        <p>スコア {{ score }}</p>
-        <p class="problem">{{ displayedProblem }}</p>
-        <p>timer: {{ inputTimer }}</p>
-        <p class="error">
+        <p>現在スコア {{ score }} <span v-if="scoreDiff" class="diminished">(+ {{ scoreDiff }})</span></p>
+        <blockquote>{{ displayedProblem }}/{{ pendingProblem }}</blockquote>
+        <p class="diminished">シンキングタイム: {{ inputTimer }}</p>
+        <p class="diminished">
           アルファベット: {{ alphaInput }}
         </p>
-        <p class="error">
-          ローマ字: {{ kanaInput }}{{ pendingInput }}
+        <p class="diminished">
+          かな: {{ kanaInput }}{{ pendingInput }}
         </p>
-        <p>❌{{ problems.problems[problemId].displayAnswer }}</p>
+        <p>A. {{ problems.problems[problemId].displayAnswer }}</p>
         <small>{{ problems.problems[problemId].explanation }}</small>
+        <hr />
         <p>[Space] で次へ</p>
       </div>
 
       <div v-if="state === STATES.RESULT">
-        <p>すごい！</p>
-        <p>スコア {{ score }}</p>
+        <h2>検定終了</h2>
+        <p>おつかれさまでした！</p>
+        <p>
+          スコア: {{ score }} 点 (正答数 {{ correctCount }}/{{ problems.problems.length }})
+          <a target="_blank" :href="'https://twitter.com/intent/tweet?text=' + shareText">Tweet</a>
+        </p>
+        <hr />
         <p>[Space] で最初に戻る</p>
       </div>
 
