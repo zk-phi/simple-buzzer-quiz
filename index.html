@@ -46,6 +46,9 @@
       </header>
 
       <div v-if="state === STATES.INTRO">
+        <p v-if="problems && problems.description">
+          {{ problems.description }}
+        </p>
         <h3>遊びかた</h3>
         <ul>
           <li>わかりそうなところで [Space] を押すと問題文が止まります</li>
