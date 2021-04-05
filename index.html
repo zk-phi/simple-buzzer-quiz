@@ -36,10 +36,11 @@
           早押し検定
           <span v-if="problems">"{{ problems.title }}"</span>
         </h1>
-        <p>
+        <p v-if="problems">
           作問:
           <a target="_blank" :href="problems.author.url">{{ problems.author.text }}</a>
-          / プログラム:
+          /
+          プログラム:
           <a target="_blank" href="https://zk-phi.github.io/">zk-phi</a>
         </p>
       </header>
