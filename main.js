@@ -96,6 +96,8 @@ const vm = new Vue({
       };
       xhr.onerror = function () { vm.loadError = true; };
       xhr.open("GET", match ? `https://${match[1]}` : "problems.json", true);
+      xhr.setRequestHeader("Pragma", "no-cache");
+      xhr.setRequestHeader("Cache-Control", "no-cache");
       xhr.send(null);
     },
     monitorLoadingStatus: function () {
