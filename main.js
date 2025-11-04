@@ -86,6 +86,8 @@ const vm = new Vue({
   methods: {
     loadProblems: function () {
       const match = location.href.match(/\?(.+)$/);
+      const url = match ? `https://${match[1]}` : "problems.json";
+      const cachebuster = (/\?/.test(url) ? "&" : "?") + (new Date()).getTime();
       const xhr = new XMLHttpRequest();
       xhr.onload = function () {
         if (xhr.responseText.startsWith("作問テンプレートv1.0")) {
@@ -95,7 +97,7 @@ const vm = new Vue({
         }
       };
       xhr.onerror = function () { vm.loadError = true; };
-      xhr.open("GET", match ? `https://${match[1]}` : "problems.json", true);
+      xhr.open("GET", url + cachebuster, true);
       xhr.send(null);
     },
     monitorLoadingStatus: function () {
