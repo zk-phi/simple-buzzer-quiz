@@ -95,6 +95,7 @@ const vm = new Vue({
         } else {
           vm.problems = JSON.parse(xhr.responseText);
         }
+        document.title = vm.problems.title;
       };
       xhr.onerror = function () { vm.loadError = true; };
       xhr.open("GET", url + cachebuster, true);

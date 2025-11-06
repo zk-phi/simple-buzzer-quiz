@@ -2,7 +2,7 @@
 <html>
 
   <head>
-    <title>早押し検定</title>
+    <title>早押しクイズ</title>
     <meta charset="UTF-8">
     <meta name="description" content="早押しクイズができます" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
@@ -18,15 +18,10 @@
     <div id="app">
 
       <div v-if="state === STATES.INTRO" class="container">
-        <div class="panel">
+        <div v-if="problems" class="panel">
           <div>
-            <h2>
-              早押し検定
-              <small v-if="problems">〜 {{ problems.title }}</small>
-            </h2>
-            <div v-if="loadError">❌ 問題の読み込みに失敗しました</div>
-            <div v-else-if="loadingStatus">{{ loadingStatus }}</div>
-            <div v-else>
+            <h2>{{ problems.title }}</h2>
+            <div>
               作問:
               <a v-if="problems" target="_blank" :href="problems.author.url">
                 {{ problems.author.text }}
@@ -40,9 +35,13 @@
               <a target="_blank" href="https://soundeffect-lab.info">効果音ラボ</a>
             </small>
           </div>
-          <div v-if="problems && problems.description">
+          <div v-if="problems.description">
             {{ problems.description }}
           </div>
+        </div>
+        <div v-else class="panel">
+          <div v-if="loadError">❌ 問題の読み込みに失敗しました</div>
+          <div v-else-if="loadingStatus">{{ loadingStatus }}</div>
         </div>
         <div class="window">
           <div class="window-title">ルール</div>
@@ -229,7 +228,7 @@
       <div v-if="state === STATES.RESULT" class="container">
         <div class="panel">
           <div>
-            <h3>検定終了</h3>
+            <h3>ゲーム終了</h3>
             <p>おつかれさまでした！</p>
           </div>
           <div>
