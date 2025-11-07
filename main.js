@@ -92,6 +92,8 @@ const vm = new Vue({
       xhr.onload = function () {
         if (xhr.responseText.startsWith("作問テンプレートv1.0")) {
           vm.problems = importTsv1_0(xhr.responseText);
+        } else if (xhr.responseText.startsWith("作問テンプレートv1.1")) {
+          vm.problems = importTsv1_1(xhr.responseText)
         } else {
           vm.problems = JSON.parse(xhr.responseText);
         }
