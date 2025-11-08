@@ -39,6 +39,7 @@ const data = {
   state: STATES.INTRO,
   score: 0,
   correctCount: 0,
+  problemsCount: 0,
   history: [],
   /* problem */
   problemId: null,
@@ -69,7 +70,7 @@ const vm = new Vue({
     shareUrl: function () {
       return "https://twitter.com/intent/tweet?text=" +
              this.problems.title + "で" + this.score + "点を獲得した！" +
-             "（正答数" + this.correctCount + "/" + this.problems.problems.length + "）" +
+             "（正答数" + this.correctCount + "/" + this.problemsCount + "）" +
              location.href;
     },
   },
@@ -120,6 +121,10 @@ const vm = new Vue({
       }
       this.score = 0;
       this.correctCount = 0;
+      this.problemsCount = Math.min(
+        this.problems.limit ?? Infinity,
+        this.problems.problems.length
+      );
       this.history = [];
       this.initProblem(0);
     },
@@ -224,7 +229,7 @@ const vm = new Vue({
       this.state = STATES.ERROR;
     },
     nextProblem: function () {
-      if (this.problemId + 1 < this.problems.problems.length) {
+      if (this.problemId + 1 < this.problemsCount) {
         this.initProblem(this.problemId + 1);
       } else {
         playAudio(SOUNDS.COMPLETED);

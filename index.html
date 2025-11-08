@@ -89,7 +89,7 @@
       <div v-if="state === STATES.READING" class="container">
         <div>
           <h2 class="problem-header">
-            Q {{ problemId + 1 }} <small>/ {{ problems.problems.length }}</small>
+            Q {{ problemId + 1 }} <small>/ {{ problemsCount }}</small>
           </h2>
           <div class="score-bar">
             <div>score: {{ score }}</div>
@@ -118,7 +118,7 @@
       <div v-if="state === STATES.INPUT" class="container">
         <div>
           <h2 class="problem-header">
-            Q {{ problemId + 1 }} <small>/ {{ problems.problems.length }}</small>
+            Q {{ problemId + 1 }} <small>/ {{ problemsCount }}</small>
           </h2>
           <div class="score-bar">
             <div>score: {{ score }}</div>
@@ -146,7 +146,7 @@
       <div v-if="state === STATES.CORRECT" class="container">
         <div>
           <h2 class="problem-header">
-            Q {{ problemId + 1 }} <small>/ {{ problems.problems.length }}</small>
+            Q {{ problemId + 1 }} <small>/ {{ problemsCount }}</small>
           </h2>
           <div class="score-bar">
             <div>
@@ -190,7 +190,7 @@
       <div v-if="state === STATES.ERROR" class="container">
         <div>
           <h2 class="problem-header">
-            Q {{ problemId + 1 }} <small>/ {{ problems.problems.length }}</small>
+            Q {{ problemId + 1 }} <small>/ {{ problemsCount }}</small>
           </h2>
           <div class="score-bar">
             <div>score: {{ score }}</div>
@@ -237,7 +237,7 @@
           </div>
           <div>
             スコア: {{ score }} 点
-            (正答数 {{ correctCount }}/{{ problems.problems.length }})
+            (正答数 {{ correctCount }}/{{ problemsCount }})
             <a target="_blank" :href="shareUrl">Tweet</a>
           </div>
         </div>
