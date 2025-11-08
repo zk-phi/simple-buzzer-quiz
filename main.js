@@ -33,7 +33,7 @@ const SOUNDS = {
 
 const data = {
   problems: null,
-  loadError: false,
+  loadError: null,
   loadingStatus: "問題データを読み込み中 ...",
   /* game */
   state: STATES.INTRO,
@@ -91,16 +91,25 @@ const vm = new Vue({
       const cachebuster = (/\?/.test(url) ? "&" : "?") + (new Date()).getTime();
       const xhr = new XMLHttpRequest();
       xhr.onload = function () {
-        if (xhr.responseText.startsWith("作問テンプレートv1.0")) {
-          vm.problems = importTsv1_0(xhr.responseText);
-        } else if (xhr.responseText.startsWith("作問テンプレートv1.1")) {
-          vm.problems = importTsv1_1(xhr.responseText)
-        } else {
-          vm.problems = JSON.parse(xhr.responseText);
+        try {
+          if (xhr.status >= 400) {
+            throw new Error(xhr.status.toString());
+          }
+          if (xhr.responseText.startsWith("作問テンプレートv1.0")) {
+            vm.problems = importTsv1_0(xhr.responseText);
+          } else if (xhr.responseText.startsWith("作問テンプレートv1.1")) {
+            vm.problems = importTsv1_1(xhr.responseText)
+          } else {
+            vm.problems = importJson(xhr.responseText);
+          }
+          document.title = vm.problems.title;
+        } catch (e) {
+          vm.loadError = e.message;
         }
-        document.title = vm.problems.title;
       };
-      xhr.onerror = function () { vm.loadError = true; };
+      xhr.onerror = function () {
+        vm.loadError = "URL が不正、またはオフライン？";
+      };
       xhr.open("GET", url + cachebuster, true);
       xhr.send(null);
     },
