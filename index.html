@@ -230,6 +230,10 @@
           <div>
             <h3>ゲーム終了</h3>
             <p>おつかれさまでした！</p>
+            <div v-if="problems && problems.aftermessage">
+            {{ problems.afterdescription }}
+            </div>
+
           </div>
           <div>
             スコア: {{ score }} 点
