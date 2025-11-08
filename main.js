@@ -33,13 +33,13 @@ const SOUNDS = {
 
 const data = {
   problems: null,
+  problemsCount: 0,
   loadError: null,
   loadingStatus: "問題データを読み込み中 ...",
   /* game */
   state: STATES.INTRO,
   score: 0,
   correctCount: 0,
-  problemsCount: 0,
   history: [],
   /* problem */
   problemId: null,
@@ -102,6 +102,10 @@ const vm = new Vue({
           } else {
             vm.problems = importJson(xhr.responseText);
           }
+          vm.problemsCount = Math.min(
+            vm.problems.limit ?? Infinity,
+            vm.problems.problems.length
+          );
           document.title = vm.problems.title;
         } catch (e) {
           vm.loadError = e.message;
@@ -130,10 +134,6 @@ const vm = new Vue({
       }
       this.score = 0;
       this.correctCount = 0;
-      this.problemsCount = Math.min(
-        this.problems.limit ?? Infinity,
-        this.problems.problems.length
-      );
       this.history = [];
       this.initProblem(0);
     },
