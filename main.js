@@ -66,6 +66,12 @@ const vm = new Vue({
     window.addEventListener("keydown", (e) => vm.keyDown(e.key));
     this.loadProblems();
   },
+  watch: {
+    state: function () {
+      /* fixme */
+      setTimeout(() => window.scrollTo(0, 0), 30);
+    },
+  },
   computed: {
     shareUrl: function () {
       return "https://twitter.com/intent/tweet?text=" +

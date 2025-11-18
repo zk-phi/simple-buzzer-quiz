@@ -22,10 +22,10 @@
           <div>
             <h2>{{ problems.title }}</h2>
             <div v-if="problemsCount < problems.problems.length">
-              —— 全 {{ problems.problems.length }} 問から {{ problemsCount }} 問
+              全 {{ problems.problems.length }} 問から {{ problemsCount }} 問
             </div>
             <div v-else>
-              —— 全 {{ problemsCount }} 問
+              全 {{ problemsCount }} 問
             </div>
             <div v-if="problems.description">
               {{ problems.description }}
@@ -232,14 +232,19 @@
             <h3>ゲーム終了</h3>
             <p>おつかれさまでした！</p>
             <div v-if="problems && problems.aftermessage">
-            {{ problems.afterdescription }}
+              {{ problems.afterdescription }}
             </div>
-
           </div>
           <div>
             スコア: {{ score }} 点
             (正答数 {{ correctCount }}/{{ problemsCount }})
             <a target="_blank" :href="shareUrl">Tweet</a>
+            <hr />
+          </div>
+          <div>
+            <small>
+              <a target="_blank" href="https://zk-phi.github.io/publiqa/about.html">早押しクイズエンジン publiQa</a>
+            </small>
           </div>
         </div>
         <div class="window">
