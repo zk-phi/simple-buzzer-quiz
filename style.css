@@ -226,9 +226,9 @@ hr {
 }
 
 .keyboard {
-  --keyboard-key-w: 10vw;
+  --keyboard-key-w: 10.25vw;
   --keyboard-key-h: 12vw;
-  --keyboard-key-margin: 1vw;
+  --keyboard-key-margin: 1.8vw;
   position: fixed;
   bottom: 0;
   left: 0;
@@ -289,6 +289,10 @@ hr {
   background: white;
   border-radius: 2vw;
   box-shadow: 0 0.3vw grey;
+}
+
+.keyboard-key.special {
+  background: #aaa;
 }
 
 .keyboard-key.spacer {
