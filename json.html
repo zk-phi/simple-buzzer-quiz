@@ -2,9 +2,9 @@
 <html>
 
   <head>
-    <title>早押し検定</title>
+    <title>publiQa - How To</title>
     <meta charset="UTF-8">
-    <meta name="description" content="早押しクイズができます" />
+    <meta name="description" content="早押しクイズエンジン publiQa" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <link rel="stylesheet" href="./assets/reset.css" type="text/css">
     <link rel="stylesheet" href="style.css" type="text/css">
@@ -14,13 +14,13 @@
     <div class="container">
 
       <div class="panel">
-        <h2>早押し検定 <small>〜 問題データの作り方</small></h2>
+        <h2>問題データの作り方</h2>
       </div>
 
       <div class="window">
         <div class="window-title">Google Spreadsheet を使った作り方（初心者向け）</div>
         <div class="window-body">
-          <p>一度設定してしまえばスプレッドシートで問題を管理できて便利ですが、問題のロードはやや重くなります。</p>
+          <p>スプレッドシートの画面で簡単に問題を管理できるので、初心者さんにおすすめです。ただし、問題のロードはやや重くなります。</p>
 
           <h4>1. シートのコピー</h4>
           <img src="./assets/copy.png" />
@@ -34,23 +34,25 @@
           <img src="./assets/url.png" />
           <p>成功すると URL が発行されます。これを忘れずにコピーしておいてください。</p>
 
-          <h4>3. ゲームの URL を作成</h4>
-          <p>コピーした URL を、シートの「TSV の URL」欄に貼り付けてください。「ゲームの URL」が自動的に作成されます。</p>
+          <h4>3. ゲームの URL を発行</h4>
+          <p>コピーした URL を、シートの「TSV の URL」欄に貼り付けてください。「ゲームの URL」が自動的に発行されます。</p>
           <img src="./assets/gameurl.png" />
           <p>この URL が、あなたのオリジナル問題で遊ぶための URL になります。ためしにアクセスしてみて、サンプル問題が読み込まれることを確認してください。</p>
 
             <h4>4. 問題の編集</h4>
-            <p>あとはあなたの問題をスプレッドシートに記入するだけです！スプレッドシートを保存すれば、まもなくゲームに反映されます。</p>
+            <p>あとはあなたの問題をスプレッドシートに記入するだけです！スプレッドシートを更新すれば、まもなくゲームに反映されます。</p>
         </div>
       </div>
 
       <div class="window">
         <div class="window-title">JSON データを自分で作成する（上級者向け）</div>
         <div class="window-body">
-          <p>プログラマーさんなど、自力でなんとかできる方はこちらがおすすめです。</p>
+          <p>
+            プログラマーさんなど、自力でなんとかできる方におすすめです。読み込み速度などの点でスプレッドシートより有利になります。
+          </p>
 
           <h4>データの形式</h4>
-          <p>このアプリでは、以下の形式の JSON ファイルを開くことができます。<a target="_blank" href="https://github.com/zk-phi/simple-buzzer-quiz/blob/gh-pages/problems.json">サンプル</a></p>
+          <p>このアプリでは、以下の形式の JSON ファイルを開くことができます。<a target="_blank" href="https://github.com/zk-phi/publiqa/blob/gh-pages/problems.json">サンプル</a></p>
           <ul>
             <li>title: 問題セットのタイトル（文字列）</li>
             <li>
@@ -78,10 +80,10 @@
           <p>かなとアルファベットが混在するような解答は、現時点では設定できません🙇</p>
 
           <h4>データの読み込みかた</h4>
-          <p>JSON ファイルを適当な場所にアップロードして、「https://zk-phi.github.io/simple-buzzer-quiz/?」の後ろに続けて、URL を書いて下さい（「https://」 は不要）。GitHub Gist あたりが便利だと思います。</p>
+          <p>JSON ファイルを適当な場所にアップロードして、「https://zk-phi.github.io/publiqa/?」の後ろに続けて、URL を書いて下さい（「https://」 は不要）。GitHub Gist あたりが便利だと思います。</p>
           <ul>
             <li>
-              例：<a target="_blank" href="https://zk-phi.github.io/simple-buzzer-quiz/?raw.githubusercontent.com/zk-phi/simple-buzzer-quiz/refs/heads/gh-pages/problems.json">https://zk-phi.github.io/simple-buzzer-quiz/?raw.githubusercontent.com/zk-phi/simple-buzzer-quiz/refs/heads/gh-pages/problems.json</a>
+              例：<a target="_blank" href="https://zk-phi.github.io/publiqa/?raw.githubusercontent.com/zk-phi/publiqa/refs/heads/gh-pages/problems.json">https://zk-phi.github.io/publiqa/?raw.githubusercontent.com/zk-phi/publiqa/refs/heads/gh-pages/problems.json</a>
             </li>
           </ul>
         </div>

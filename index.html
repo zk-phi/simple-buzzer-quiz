@@ -2,9 +2,9 @@
 <html>
 
   <head>
-    <title>早押しクイズ</title>
+    <title>publiQa</title>
     <meta charset="UTF-8">
-    <meta name="description" content="早押しクイズができます" />
+    <meta name="description" content="早押しクイズエンジン publiQa" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <script src="./assets/vue-2.5.16.min.js"></script>
     <script src="./lib/romaji.js"></script>
@@ -21,22 +21,25 @@
         <div v-if="problems" class="panel">
           <div>
             <h2>{{ problems.title }}</h2>
-            <div>
+            <div v-if="problemsCount < problems.problems.length">
+              —— 全 {{ problems.problems.length }} 問から {{ problemsCount }} 問
+            </div>
+            <div v-else>
+              —— 全 {{ problemsCount }} 問
+            </div>
+            <div v-if="problems.description">
+              {{ problems.description }}
+            </div>
+            <hr />
+          </div>
+          <div>
+            <div v-if="problems">
               作問:
-              <a v-if="problems" target="_blank" :href="problems.author.url">
-                {{ problems.author.text }}
-              </a>
+              <a target="_blank" :href="problems.author.url">{{ problems.author.text }}</a>
             </div>
             <small>
-              プログラム:
-              <a target="_blank" href="https://zk-phi.github.io/">zk-phi</a>
-              /
-              効果音:
-              <a target="_blank" href="https://soundeffect-lab.info">効果音ラボ</a>
+              <a target="_blank" href="https://zk-phi.github.io/publiqa/about.html">早押しクイズエンジン publiQa</a>
             </small>
-          </div>
-          <div v-if="problems.description">
-            {{ problems.description }}
           </div>
           <div class="logo">Q</div>
         </div>
@@ -48,11 +51,9 @@
           <div class="window-title">ルール</div>
           <div class="window-body">
             <ul>
-              <li v-if="IS_TOUCH">わかりそうなところで画面をタップすると問題文が止まります。</li>
-              <li v-else>わかりそうなところで [Space] キーを押すと問題文が止まります。</li>
-              <li>早く止めて正解するほど高得点がもらえます。</li>
-              <li>止めてから約５秒間手を動かさずにいると、不正解になります。</li>
-              <li>不正解の問題は０点になります。お手つきはありません。</li>
+              <li>早く押して正解するほど高得点になります。</li>
+              <li>回答権は１問につき１回です。</li>
+              <li>シンキングタイムは約５秒です。</li>
             </ul>
           </div>
         </div>
@@ -60,14 +61,10 @@
           <div class="window-title">操作方法</div>
           <div class="window-body">
             <ul>
-              <li>タイピングゲームのように、キーボードで答えを入力してください。</li>
-              <li>漢字変換や、「半角・全角」の切り替えは不要です。</li>
-              <li>「かな入力」には対応していません。ゴメンナサイ</li>
-              <li>
-                操作方法が不安な場合、まずは
-                <a target="_blank" href="https://zk-phi.github.io/simple-buzzer-quiz/">サンプル問題</a>
-                をどうぞ。
-              </li>
+              <li v-if="IS_TOUCH">画面をタップで回答モードになります。</li>
+              <li v-else>[Space] キーで回答モードになります。</li>
+              <li>日本語は「ローマ字」で入力してください。</li>
+              <li>漢字変換などは不要です。</li>
             </ul>
           </div>
         </div>
@@ -76,8 +73,11 @@
           <div class="window-body">
             <ul>
               <li>タイピング速度はスコアに関係ありません。</li>
-              <li>Backspace を使うと持ち時間が短かくなるので、慎重に入力してください。</li>
-              <li><a target="_blank" href="./json.html">あなたもオリジナルのクイズを出題してみませんか？</a></li>
+              <li>
+                操作が不安な場合は
+                <a target="_blank" href="https://zk-phi.github.io/publiqa/">サンプル問題</a>
+                をどうぞ。
+              </li>
             </ul>
           </div>
         </div>
