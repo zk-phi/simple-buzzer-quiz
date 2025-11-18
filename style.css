@@ -49,6 +49,7 @@ body {
 }
 
 .panel {
+  position: relative;
   display: flex;
   flex-direction: column;
   background: white;
@@ -80,6 +81,7 @@ body {
 }
 
 .area {
+  position: relative;
   display: flex;
   flex-direction: column;
   background: #fff8;
@@ -142,6 +144,18 @@ button:active {
 
 hr {
   margin: 8px 0 0;
+}
+
+/* title */
+
+.logo {
+  position: absolute;
+  bottom: 0;
+  right: 6px;
+  line-height: 1;
+  font-size: 100px;
+  font-weight: 900;
+  color: #0001;
 }
 
 /* problem */
@@ -268,7 +282,7 @@ hr {
   line-height: calc(var(--keyboard-key-h) - var(--keyboard-key-margin));
   background: white;
   border-radius: 2vw;
-  box-shadow: 0.2vw 0.2vw grey;
+  box-shadow: 0 0.3vw grey;
 }
 
 .keyboard-key.spacer {
