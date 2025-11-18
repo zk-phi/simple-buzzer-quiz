@@ -197,6 +197,12 @@ hr {
   flex-grow: 1;
 }
 
+.pie {
+  display: inline;
+  vertical-align: bottom;
+  transform: rotate(-90deg);
+}
+
 .label {
   display: inline-block;
   font-size: smaller;

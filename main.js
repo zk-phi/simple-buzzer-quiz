@@ -1,6 +1,7 @@
 const TICK_INTERVAL = 125;  /* msec */
 const INPUT_TIMER   = 5999; /* msec */
 const BS_PENALTY    = 200; /* msec */
+const PIE_DASHARRAY = 63;
 const IS_TOUCH = "ontouchstart" in window;
 
 function shuffleArray (array) {
@@ -42,20 +43,19 @@ const data = {
   correctCount: 0,
   history: [],
   /* problem */
-  problemId: null,
+  problemId: 0,
   scoreDiff: 200,
-  displayedProblem: null,
-  pendingProblem: null,
-  progressBG: null,
+  displayedProblem: "",
+  pendingProblem: "",
   /* input */
-  kanaInput: null,
-  alphaInput: null,
-  pendingKana: null,
-  alphaCorrect: null,
-  kanaCorrect: null,
-  inputTimer: null,
-  bsCount: null,
-  inputTimerHistory: null,
+  kanaInput: "",
+  alphaInput: "",
+  pendingKana: "",
+  alphaCorrect: false,
+  kanaCorrect: false,
+  inputTimer: INPUT_TIMER,
+  bsCount: 0,
+  inputTimerHistory: [],
 };
 
 const vm = new Vue({
@@ -78,6 +78,20 @@ const vm = new Vue({
              this.problems.title + "で" + this.score + "点を獲得した！" +
              "（正答数" + this.correctCount + "/" + this.problemsCount + "）" +
              location.href;
+    },
+    progressBG: function () {
+      const c = this.state === STATES.READING ? "#DA5019" : "#EDAD0B";
+      const p = this.scoreDiff / 2;
+      return (
+        `linear-gradient(to right,#edad0b 0%,#edad0b 50%,${c} 50%,${c} ${p}%,#fff ${p}%)`
+      );
+    },
+    pieStyle: function () {
+      const p = this.inputTimer / INPUT_TIMER;
+      return {
+        strokeDasharray: PIE_DASHARRAY,
+        strokeDashoffset: PIE_DASHARRAY + PIE_DASHARRAY * p,
+      };
     },
   },
   filters: {
@@ -147,7 +161,6 @@ const vm = new Vue({
       playAudio(SOUNDS.PROBLEM);
       this.problemId = problemId;
       this.scoreDiff = 200;
-      this.progressBG = "linear-gradient(to right,#edad0b 0%,#edad0b 50%,#DA5019 50%)";
       this.displayedProblem = "";
       this.pendingProblem = "問題:  " + this.problems.problems[problemId].body.normalize();
       this.state = STATES.READING;
@@ -158,18 +171,12 @@ const vm = new Vue({
         this.pendingProblem = this.pendingProblem.slice(1);
         const total = this.problems.problems[this.problemId].body.length;
         this.scoreDiff = 100 + Math.round(this.pendingProblem.length / total * 100);
-        const p = this.scoreDiff / 2;
-        this.progressBG = (
-          `linear-gradient(to right,#edad0b 0%,#edad0b 50%,#DA5019 50%,#DA5019 ${p}%,#fff ${p}%)`
-        );
       } else {
         this.startInput();
       }
     },
     stopProblem: function () {
       playAudio(SOUNDS.ANSWER);
-      const p = this.scoreDiff / 2;
-      this.progressBG = `linear-gradient(to right,#edad0b 0%,#edad0b ${p}%,#fff ${p}%)`;
       this.startInput();
     },
     startInput: function () {

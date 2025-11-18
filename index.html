@@ -136,7 +136,12 @@
           </blockquote>
         </div>
         <div class="area">
-          <div class="area-title">キーボードで回答を入力 {{ Math.floor(inputTimer / 1000) }}</div>
+          <div class="area-title">
+            キーボードで回答を入力
+            <svg class="pie" :style="pieStyle" width="24" height="24" xmlns="http://www.w3.org/2000/svg">
+              <circle r="10" cx="12" cy="12" stroke-width="3" stroke="#000a" fill="none" />
+            </svg>
+          </div>
           <div>
             <div><span class="label">英数</span> {{ alphaInput }}|</div>
             <div><span class="label">かな</span> {{ kanaInput }}{{ pendingKana }}|</div>
@@ -166,7 +171,7 @@
           <blockquote>{{ displayedProblem }}{{ pendingProblem }}</blockquote>
         </div>
         <div class="area">
-          <div class="area-title">キーボードで回答を入力 {{ Math.floor(inputTimer / 1000) }}</div>
+          <div class="area-title">キーボードで回答を入力</div>
           <div>
             <div :class="{ diminished: !alphaCorrect, correct: alphaCorrect }">
               <span class="label">英数</span> {{ alphaInput }}
@@ -206,7 +211,7 @@
           <blockquote>{{ displayedProblem }}{{ pendingProblem }}</blockquote>
         </div>
         <div class="area">
-          <div class="area-title">キーボードで回答を入力 {{ Math.floor(inputTimer / 1000) }}</div>
+          <div class="area-title">キーボードで回答を入力</div>
           <div>
             <div class="diminished">
               <span class="label">英数</span> {{ alphaInput }}
