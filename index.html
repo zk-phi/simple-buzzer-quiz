@@ -81,10 +81,16 @@
             </ul>
           </div>
         </div>
+        <div class="area">
+          <label>
+            <input type="checkbox" v-model="enableSound" />
+            効果音を再生する
+          </label>
+        </div>
         <div v-if="loadError" class="area">❌ 問題の読み込みに失敗しました（{{loadError}}）</div>
         <div v-else-if="loadingStatus" class="area">{{ loadingStatus }}</div>
-        <button v-else-if="IS_TOUCH" @click="keyDown(' ')">スタート (音が鳴ります)</button>
-        <div v-else class="area">[Space] でスタート (音が鳴ります)</div>
+        <button v-else-if="IS_TOUCH" @click="keyDown(' ')">スタート</button>
+        <div v-else class="area">[Space] でスタート</div>
       </div>
 
       <div v-if="state === STATES.READING" class="container">

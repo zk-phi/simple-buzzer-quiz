@@ -37,6 +37,7 @@ const data = {
   problemsCount: 0,
   loadError: null,
   loadingStatus: "問題データを読み込み中 ...",
+  enableSound: true,
   /* game */
   state: STATES.INTRO,
   score: 0,
@@ -105,6 +106,11 @@ const vm = new Vue({
     },
   },
   methods: {
+    playAudio: function (audio) {
+      if (this.enableSound) {
+        playAudio(audio);
+      }
+    },
     loadProblems: function () {
       const match = location.href.match(/\?(.+)$/);
       const url = match ? `https://${match[1]}` : "problems.json";
@@ -158,7 +164,7 @@ const vm = new Vue({
       this.initProblem(0);
     },
     initProblem: function (problemId) {
-      playAudio(SOUNDS.PROBLEM);
+      this.playAudio(SOUNDS.PROBLEM);
       this.problemId = problemId;
       this.scoreDiff = 200;
       this.displayedProblem = "";
@@ -176,11 +182,11 @@ const vm = new Vue({
       }
     },
     stopProblem: function () {
-      playAudio(SOUNDS.ANSWER);
+      this.playAudio(SOUNDS.ANSWER);
       this.startInput();
     },
     startInput: function () {
-      playAudio(SOUNDS.TIMER);
+      this.playAudio(SOUNDS.TIMER);
       this.inputTimer = INPUT_TIMER;
       this.kanaInput = this.alphaInput = this.pendingKana = "";
       this.alphaCorrect = this.kanaCorrect = false;
@@ -190,7 +196,7 @@ const vm = new Vue({
     },
     processInput: function (key) {
       stopAudio(SOUNDS.TIMER);
-      playAudio(SOUNDS.KEY);
+      this.playAudio(SOUNDS.KEY);
       this.inputTimerHistory = this.inputTimerHistory.concat(this.inputTimer);
       this.inputTimer = INPUT_TIMER;
       this.bsCount = Math.max(0, this.bsCount - 1);
@@ -210,7 +216,7 @@ const vm = new Vue({
       if (this.alphaInput === "") {
         return;
       }
-      playAudio(SOUNDS.KEY);
+      this.playAudio(SOUNDS.KEY);
       stopAudio(SOUNDS.TIMER);
       this.bsCount += 1;
       this.alphaInput = this.alphaInput.slice(0, -1);
@@ -231,7 +237,7 @@ const vm = new Vue({
       }
     },
     inputCorrect: function () {
-      playAudio(SOUNDS.CORRECT);
+      this.playAudio(SOUNDS.CORRECT);
       this.history = this.history.concat([{
         problem: this.displayedProblem + (this.pendingProblem === "" ? "" : "/"),
         correct: true,
@@ -242,7 +248,7 @@ const vm = new Vue({
     },
     inputError: function () {
       if (this.kanaInput !== "" || this.alphaInput !== "" || this.pendingProblem !== "") {
-        playAudio(SOUNDS.WRONG);
+        this.playAudio(SOUNDS.WRONG);
       }
       this.history = this.history.concat([{
         problem: this.displayedProblem + (this.pendingProblem === "" ? "" : "/"),
@@ -254,7 +260,7 @@ const vm = new Vue({
       if (this.problemId + 1 < this.problemsCount) {
         this.initProblem(this.problemId + 1);
       } else {
-        playAudio(SOUNDS.COMPLETED);
+        this.playAudio(SOUNDS.COMPLETED);
         this.state = STATES.RESULT;
       }
     },
