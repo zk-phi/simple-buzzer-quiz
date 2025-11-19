@@ -119,7 +119,7 @@ const vm = new Vue({
       xhr.onload = function () {
         try {
           if (xhr.status >= 400) {
-            throw new Error(xhr.status.toString());
+            throw new Error(`通信エラー：コード ${xhr.status}`);
           }
           if (xhr.responseText.startsWith("作問テンプレートv1.0")) {
             vm.problems = importTsv1_0(xhr.responseText);
@@ -168,7 +168,7 @@ const vm = new Vue({
       this.problemId = problemId;
       this.scoreDiff = 200;
       this.displayedProblem = "";
-      this.pendingProblem = "問題:  " + this.problems.problems[problemId].body.normalize();
+      this.pendingProblem = "問題:  " + this.problems.problems[problemId].body;
       this.state = STATES.READING;
     },
     revealProblem: function () {
