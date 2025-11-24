@@ -76,11 +76,11 @@ const vm = new Vue({
   filters: {
     toShareUrlCorrect: function (problem) {
       return "https://twitter.com/intent/tweet?text=" +
-             "「" + problem + "」に正解した！" + location.href;
+             "「" + problem + "」に正解した！" + location.href + " #publiQa";
     },
     toShareUrlWrong: function (problem) {
       return "https://twitter.com/intent/tweet?text=" +
-             "「" + problem + "」に正解できなかった😭" + location.href;
+             "「" + problem + "」に正解できなかった😭" + location.href + " #publiQa";
     },
   },
   methods: {
