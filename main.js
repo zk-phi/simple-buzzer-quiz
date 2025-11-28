@@ -88,7 +88,7 @@ const vm = new Vue({
       );
     },
     pieStyle: function () {
-      const p = Math.max(0, this.inputTimer - 1000) / INPUT_TIMER;
+      const p = Math.max(0, this.inputTimer - 1000) / Math.max(INPUT_TIMER - 1000);
       return {
         strokeDasharray: PIE_DASHARRAY,
         strokeDashoffset: PIE_DASHARRAY + PIE_DASHARRAY * p,
