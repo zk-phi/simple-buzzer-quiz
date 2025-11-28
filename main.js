@@ -75,10 +75,10 @@ const vm = new Vue({
   },
   computed: {
     shareUrl: function () {
-      return "https://twitter.com/intent/tweet?text=" +
+      return "https://x.com/intent/tweet?text=" +
              this.problems.title + "で" + this.score + "点を獲得した！" +
              "（正答数" + this.correctCount + "/" + this.problemsCount + "）" +
-             location.href;
+             location.href + " %23publiQa";
     },
     progressBG: function () {
       const c = this.state === STATES.READING ? "#DA5019" : "#EDAD0B";
@@ -97,12 +97,12 @@ const vm = new Vue({
   },
   filters: {
     toShareUrlCorrect: function (problem) {
-      return "https://twitter.com/intent/tweet?text=" +
-             "「" + problem + "」に正解した！" + location.href + " #publiQa";
+      return "https://x.com/intent/tweet?text=" +
+             "「" + problem + "」に正解した！" + location.href + " %23publiQa";
     },
     toShareUrlWrong: function (problem) {
-      return "https://twitter.com/intent/tweet?text=" +
-             "「" + problem + "」に正解できなかった😭" + location.href + " #publiQa";
+      return "https://x.com/intent/tweet?text=" +
+             "「" + problem + "」に正解できなかった😭" + location.href + " %23publiQa";
     },
   },
   methods: {
