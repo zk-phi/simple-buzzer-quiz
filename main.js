@@ -88,6 +88,7 @@ const vm = new Vue({
       );
     },
     pieStyle: function () {
+      // https://zenn.dev/perokichi/articles/21df4852a9b25f
       const p = Math.max(0, this.inputTimer - 1000) / Math.max(INPUT_TIMER - 1000);
       return {
         strokeDasharray: PIE_DASHARRAY,
