@@ -151,7 +151,7 @@
           </div>
           <div>
             <div><span class="label">英数</span> {{ alphaInput }}|</div>
-            <div><span class="label">かな</span> {{ kanaInput }}{{ pendingKana }}|</div>
+            <div><span class="label">かな</span> {{ kanaInput[0] }}{{ kanaInput[1] }}|</div>
           </div>
         </div>
       </div>
@@ -185,7 +185,7 @@
               {{ alphaCorrect ? "⭕" : "" }}
             </div>
             <div :class="{ diminished: !kanaCorrect, correct: kanaCorrect }">
-              <span class="label">かな</span> {{ kanaInput }}{{ pendingKana }}
+              <span class="label">かな</span> {{ kanaInput[0] }}{{ kanaInput[1] }}
               {{ kanaCorrect ? "⭕" : "" }}
             </div>
           </div>
@@ -224,7 +224,7 @@
               <span class="label">英数</span> {{ alphaInput }}
             </div>
             <div class="diminished">
-              <span class="label">かな</span> {{ kanaInput }}{{ pendingKana }}
+              <span class="label">かな</span> {{ kanaInput[0] }}{{ kanaInput[1] }}
             </div>
           </div>
         </div>

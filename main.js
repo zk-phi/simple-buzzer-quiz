@@ -81,9 +81,8 @@ const data = {
   displayedProblem: "",
   pendingProblem: "",
   /* input */
-  kanaInput: "",
   alphaInput: "",
-  pendingKana: "",
+  kanaInput: ["", ""],
   alphaCorrect: false,
   kanaCorrect: false,
   inputTimer: INPUT_TIMER,
@@ -196,7 +195,8 @@ const vm = new Vue({
       this.playAudio(SOUNDS.ANSWER);
       this.playAudio(SOUNDS.TIMER);
       this.inputTimer = INPUT_TIMER;
-      this.kanaInput = this.alphaInput = this.pendingKana = "";
+      this.alphaInput = "";
+      this.kanaInput = ["", ""];
       this.alphaCorrect = this.kanaCorrect = false;
       this.inputTimerHistory = [];
       this.bsCount = 0;
@@ -208,10 +208,10 @@ const vm = new Vue({
       this.inputTimerHistory = this.inputTimerHistory.concat(this.inputTimer);
       this.inputTimer = INPUT_TIMER;
       this.bsCount = Math.max(0, this.bsCount - 1);
-      [this.kanaInput, this.pendingKana] = inputRomaji(this.kanaInput, this.pendingKana, key);
+      this.kanaInput = inputRomaji(this.kanaInput, key);
       this.alphaInput = this.alphaInput.concat(key);
       this.kanaCorrect = this.problems.problems[this.problemId].answers.some(
-        (ans) => ans === vm.kanaInput
+        (ans) => ans === vm.kanaInput[0]
       );
       this.alphaCorrect = this.problems.problems[this.problemId].answers.some(
         (ans) => ans === vm.alphaInput
@@ -228,7 +228,7 @@ const vm = new Vue({
       stopAudio(SOUNDS.TIMER);
       this.bsCount += 1;
       this.alphaInput = this.alphaInput.slice(0, -1);
-      [this.kanaInput, this.pendingKana] = batchInputRomaji(this.alphaInput);
+      this.kanaInput = batchInputRomaji(this.alphaInput);
       const timeSpent = INPUT_TIMER - this.inputTimer;
       const penalty = this.bsCount * BS_PENALTY;
       this.inputTimer = Math.max(
@@ -255,7 +255,7 @@ const vm = new Vue({
       this.state = STATES.CORRECT;
     },
     inputError: function () {
-      if (this.kanaInput !== "" || this.alphaInput !== "" || this.pendingProblem !== "") {
+      if (this.kanaInput[0] !== "" || this.alphaInput !== "" || this.pendingProblem !== "") {
         this.playAudio(SOUNDS.WRONG);
       }
       this.history = this.history.concat([{
