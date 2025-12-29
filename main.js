@@ -1,4 +1,4 @@
-const TICK_INTERVAL = 125;  /* msec */
+const TICK_INTERVAL = 125; /* msec */
 const INPUT_TIMER   = 5999; /* msec */
 const BS_PENALTY    = 200; /* msec */
 const PIE_DASHARRAY = 63;
@@ -12,6 +12,36 @@ function shuffleArray (array) {
     array[r] = tmp;
   }
 }
+
+const loadProblems = () => (
+  new Promise((resolve, reject) => {
+    const match = location.href.match(/\?(.+)$/);
+    const url = match ? `https://${match[1]}` : "problems.json";
+    const cachebuster = (/\?/.test(url) ? "&" : "?") + (new Date()).getTime();
+    const xhr = new XMLHttpRequest();
+    xhr.onload = () => {
+      try {
+        if (xhr.status >= 400) {
+          return reject(new Error(`通信エラー：コード ${xhr.status}`));
+        }
+        if (xhr.responseText.startsWith("作問テンプレートv1.0")) {
+          return resolve(importTsv1_0(xhr.responseText));
+        } else if (xhr.responseText.startsWith("作問テンプレートv1.1")) {
+          return resolve(importTsv1_1(xhr.responseText));
+        } else {
+          return resolve(importJson(xhr.responseText));
+        }
+      } catch (e) {
+        return reject(new Error(e.message));
+      }
+    };
+    xhr.onerror = () => {
+      reject(new Error("URL が不正、またはオフライン？"));
+    };
+    xhr.open("GET", url + cachebuster, true);
+    xhr.send(null);
+  })
+);
 
 const STATES = {
   INTRO: 0,
@@ -112,37 +142,15 @@ const vm = new Vue({
         playAudio(audio);
       }
     },
-    loadProblems: function () {
-      const match = location.href.match(/\?(.+)$/);
-      const url = match ? `https://${match[1]}` : "problems.json";
-      const cachebuster = (/\?/.test(url) ? "&" : "?") + (new Date()).getTime();
-      const xhr = new XMLHttpRequest();
-      xhr.onload = function () {
-        try {
-          if (xhr.status >= 400) {
-            throw new Error(`通信エラー：コード ${xhr.status}`);
-          }
-          if (xhr.responseText.startsWith("作問テンプレートv1.0")) {
-            vm.problems = importTsv1_0(xhr.responseText);
-          } else if (xhr.responseText.startsWith("作問テンプレートv1.1")) {
-            vm.problems = importTsv1_1(xhr.responseText)
-          } else {
-            vm.problems = importJson(xhr.responseText);
-          }
-          vm.problemsCount = Math.min(
-            vm.problems.limit ?? Infinity,
-            vm.problems.problems.length
-          );
-          document.title = vm.problems.title;
-        } catch (e) {
-          vm.loadError = e.message;
-        }
-      };
-      xhr.onerror = function () {
-        vm.loadError = "URL が不正、またはオフライン？";
-      };
-      xhr.open("GET", url + cachebuster, true);
-      xhr.send(null);
+    loadProblems: async function () {
+      try {
+        const problems = await loadProblems();
+        vm.problems = problems;
+        vm.problemsCount = Math.min(problems.limit ?? Infinity, problems.problems.length);
+        document.title = problems.title;
+      } catch (e) {
+        vm.loadError = e.message;
+      }
     },
     monitorLoadingStatus: function () {
       if (this.problems) {
