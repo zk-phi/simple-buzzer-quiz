@@ -1,0 +1,10 @@
+{
+  "scripts": {
+    "dev": "http-server",
+    "test": "playwright test"
+  },
+  "devDependencies": {
+    "http-server": "^14.1.1",
+    "@playwright/test": "^1.57.0"
+  }
+}
