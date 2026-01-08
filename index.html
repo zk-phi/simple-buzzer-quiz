@@ -57,15 +57,6 @@ gtag('config', 'G-6JKK39903G');
           <div v-else-if="loadingStatus">{{ loadingStatus }}</div>
         </div>
         <div class="window">
-          <div class="window-title">ルール</div>
-          <div class="window-body">
-            <ul>
-              <li>早く押して正解するほど高得点になります。</li>
-              <li>回答は１問につき１回です。間違えても減点はありません。</li>
-            </ul>
-          </div>
-        </div>
-        <div class="window">
           <div class="window-title">操作方法</div>
           <div class="window-body">
             <ul>
@@ -76,9 +67,12 @@ gtag('config', 'G-6JKK39903G');
           </div>
         </div>
         <details class="window">
-          <summary class="window-title">Tips</summary>
+          <summary class="window-title">ルール</summary>
           <div class="window-body">
             <ul>
+              <li>早く押して正解するほど高得点になります。</li>
+              <li>シンキングタイムは５秒です。それ以上放置すると不正解になります。</li>
+              <li>回答は１問につき１回です。間違えても減点はありません。</li>
               <li>タイピング速度はスコアに関係ありません。</li>
               <li>
                 操作が不安な場合は
@@ -91,15 +85,20 @@ gtag('config', 'G-6JKK39903G');
         <details class="window">
           <summary class="window-title">利用上の注意</summary>
           <div class="window-body">
-            <p>
-              このシステムを利用したことで生じたいかなる損害も補償できません。
-            </p>
-            <p>
-              問題の著作権は各クイズの作者に帰属し、システムの作者は内容について一切の権利・責任を持ちません。作者が許可している場合を除き、問題文や解説文を無断で複製することはおやめください。また、内容についてのお問い合わせは各クイズの作者までお願いします。
-            </p>
-            <p>
-              このシステムでは、アクセス数等の集計に Google Analytics (Cookie) を使用しています。
-            </p>
+            <ul>
+              <li>
+                このシステムを利用することで生じたいかなる損害も、作者は補償できません。
+              </li>
+              <li>
+                問題の著作権は各クイズの作者に帰属します。無断複製はおやめください。
+              </li>
+              <li>
+                ゲームエンジンの作者は個々のクイズの内容を一切関知しません。お問い合わせは各クイズの作者までお願いします。
+              </li>
+              <li>
+                アクセス数等の集計に Google Analytics (Cookie) を使用しています。
+              </li>
+            </ul>
         </details>
         <div class="area">
           <label>
