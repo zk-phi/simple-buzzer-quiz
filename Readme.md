@@ -7,7 +7,7 @@ yarn install
 yarn run dev
 ```
 
-現状はペライチの Vue 実装なので、ビルドは不要です。
+現状はペライチの Vue 実装なので、ビルド不要です。
 
 ``` text
 - assets ... 効果音など

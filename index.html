@@ -52,8 +52,7 @@
           <div class="window-body">
             <ul>
               <li>早く押して正解するほど高得点になります。</li>
-              <li>回答権は１問につき１回です。</li>
-              <li>シンキングタイムは約５秒です。</li>
+              <li>回答は１問につき１回です。間違えても減点はありません。</li>
             </ul>
           </div>
         </div>
@@ -63,13 +62,12 @@
             <ul>
               <li v-if="IS_TOUCH">画面をタップで回答モードになります。</li>
               <li v-else>[Space] キーで回答モードになります。</li>
-              <li>日本語は「ローマ字」で入力してください。</li>
-              <li>漢字変換などは不要です。</li>
+              <li>日本語はローマ字で入力してください。漢字変換は不要です。</li>
             </ul>
           </div>
         </div>
-        <div class="window">
-          <div class="window-title">Tips</div>
+        <details class="window">
+          <summary class="window-title">Tips</summary>
           <div class="window-body">
             <ul>
               <li>タイピング速度はスコアに関係ありません。</li>
@@ -80,7 +78,17 @@
               </li>
             </ul>
           </div>
-        </div>
+        </details>
+        <details class="window">
+          <summary class="window-title">利用上の注意</summary>
+          <div class="window-body">
+            <p>
+              このシステムを利用したことで生じたいかなる損害も補償できません。
+            </p>
+            <p>
+              問題の著作権は各クイズの作者に帰属し、システムの作者は内容について一切の権利・責任を持ちません。作者が許可している場合を除き、問題文や解説文を無断で複製することはおやめください。また、内容についてのお問い合わせは各クイズの作者までお願いします。
+            </p>
+        </details>
         <div class="area">
           <label>
             <input type="checkbox" v-model="enableSound" />
