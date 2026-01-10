@@ -276,6 +276,9 @@ const vm = new Vue({
     backToIntro: function () {
       this.state = STATES.INTRO;
     },
+    tapKey: function (e) {
+      this.keyDown(e.currentTarget.dataset.key);
+    },
     keyDown: function (key) {
       if (this.state === STATES.INTRO && !this.loadingStatus && key === " ") {
         this.initGame();

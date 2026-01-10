@@ -106,10 +106,10 @@ gtag('config', 'G-6JKK39903G');
             効果音を再生する
           </label>
         </div>
-        <div v-if="loadError" class="area">❌ 問題の読み込みに失敗しました（{{loadError}}）</div>
-        <div v-else-if="loadingStatus" class="area">{{ loadingStatus }}</div>
-        <button v-else-if="IS_TOUCH" @click="keyDown(' ')">スタート</button>
-        <div v-else class="area">[Space] でスタート</div>
+        <div v-if="loadError" id="status" class="area">❌ 問題の読み込みに失敗しました（{{loadError}}）</div>
+        <div v-else-if="loadingStatus" id="status" class="area">{{ loadingStatus }}</div>
+        <button v-else-if="IS_TOUCH" id="status" @click="keyDown(' ')">スタート</button>
+        <div v-else id="status" class="area">[Space] でスタート</div>
       </div>
 
       <div v-if="state === STATES.READING" class="container">
@@ -209,7 +209,7 @@ gtag('config', 'G-6JKK39903G');
             </div>
           </div>
         </div>
-        <div class="area">
+        <div id="answer" class="area">
           <div class="area-title">A. {{ problems.problems[problemId].displayAnswer }}</div>
           <small v-if="problems.problems[problemId].explanation">
             {{ problems.problems[problemId].explanation }}
@@ -247,7 +247,7 @@ gtag('config', 'G-6JKK39903G');
             </div>
           </div>
         </div>
-        <div class="area">
+        <div id="answer" class="area">
           <div class="area-title">A. {{ problems.problems[problemId].displayAnswer }}</div>
           <small v-if="problems.problems[problemId].explanation">
             {{ problems.problems[problemId].explanation }}
@@ -301,124 +301,124 @@ gtag('config', 'G-6JKK39903G');
 
       <div v-if="IS_TOUCH && state === STATES.INPUT" class="keyboard">
         <div class="keyboard-row">
-          <span @touchend="keyDown('1')" class="keyboard-key-container x0975">
+          <span @touchend="tapKey" data-key="1" class="keyboard-key-container x0975">
             <span class="keyboard-key">1</span>
           </span>
-          <span @touchend="keyDown('2')" class="keyboard-key-container x0975">
+          <span @touchend="tapKey" data-key="2" class="keyboard-key-container x0975">
             <span class="keyboard-key">2</span>
           </span>
-          <span @touchend="keyDown('3')" class="keyboard-key-container x0975">
+          <span @touchend="tapKey" data-key="3" class="keyboard-key-container x0975">
             <span class="keyboard-key">3</span>
           </span>
-          <span @touchend="keyDown('4')" class="keyboard-key-container x0975">
+          <span @touchend="tapKey" data-key="4" class="keyboard-key-container x0975">
             <span class="keyboard-key">4</span>
           </span>
-          <span @touchend="keyDown('5')" class="keyboard-key-container x0975">
+          <span @touchend="tapKey" data-key="5" class="keyboard-key-container x0975">
             <span class="keyboard-key">5</span>
           </span>
-          <span @touchend="keyDown('6')" class="keyboard-key-container x0975">
+          <span @touchend="tapKey" data-key="6" class="keyboard-key-container x0975">
             <span class="keyboard-key">6</span>
           </span>
-          <span @touchend="keyDown('7')" class="keyboard-key-container x0975">
+          <span @touchend="tapKey" data-key="7" class="keyboard-key-container x0975">
             <span class="keyboard-key">7</span>
           </span>
-          <span @touchend="keyDown('8')" class="keyboard-key-container x0975">
+          <span @touchend="tapKey" data-key="8" class="keyboard-key-container x0975">
             <span class="keyboard-key">8</span>
           </span>
-          <span @touchend="keyDown('9')" class="keyboard-key-container x0975">
+          <span @touchend="tapKey" data-key="9" class="keyboard-key-container x0975">
             <span class="keyboard-key">9</span>
           </span>
-          <span @touchend="keyDown('0')" class="keyboard-key-container x0975">
+          <span @touchend="tapKey" data-key="0" class="keyboard-key-container x0975">
             <span class="keyboard-key">0</span>
           </span>
         </div>
         <div class="keyboard-row">
-          <span @touchend="keyDown('q')" class="keyboard-key-container x075">
+          <span @touchend="tapKey" data-key="q" class="keyboard-key-container x075">
             <span class="keyboard-key">Q</span>
           </span>
-          <span @touchend="keyDown('w')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="w" class="keyboard-key-container">
             <span class="keyboard-key">W</span>
           </span>
-          <span @touchend="keyDown('e')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="e" class="keyboard-key-container">
             <span class="keyboard-key">E</span>
           </span>
-          <span @touchend="keyDown('r')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="r" class="keyboard-key-container">
             <span class="keyboard-key">R</span>
           </span>
-          <span @touchend="keyDown('t')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="t" class="keyboard-key-container">
             <span class="keyboard-key">T</span>
           </span>
-          <span @touchend="keyDown('y')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="y" class="keyboard-key-container">
             <span class="keyboard-key">Y</span>
           </span>
-          <span @touchend="keyDown('u')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="u" class="keyboard-key-container">
             <span class="keyboard-key">U</span>
           </span>
-          <span @touchend="keyDown('i')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="i" class="keyboard-key-container">
             <span class="keyboard-key">I</span>
           </span>
-          <span @touchend="keyDown('o')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="o" class="keyboard-key-container">
             <span class="keyboard-key">O</span>
           </span>
-          <span @touchend="keyDown('p')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="p" class="keyboard-key-container">
             <span class="keyboard-key">P</span>
           </span>
         </div>
         <div class="keyboard-row">
-          <span @touchend="keyDown('a')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="a" class="keyboard-key-container">
             <span class="keyboard-key">A</span>
           </span>
-          <span @touchend="keyDown('s')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="s" class="keyboard-key-container">
             <span class="keyboard-key">S</span>
           </span>
-          <span @touchend="keyDown('d')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="d" class="keyboard-key-container">
             <span class="keyboard-key">D</span>
           </span>
-          <span @touchend="keyDown('f')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="f" class="keyboard-key-container">
             <span class="keyboard-key">F</span>
           </span>
-          <span @touchend="keyDown('g')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="g" class="keyboard-key-container">
             <span class="keyboard-key">G</span>
           </span>
-          <span @touchend="keyDown('h')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="h" class="keyboard-key-container">
             <span class="keyboard-key">H</span>
           </span>
-          <span @touchend="keyDown('j')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="j" class="keyboard-key-container">
             <span class="keyboard-key">J</span>
           </span>
-          <span @touchend="keyDown('k')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="k" class="keyboard-key-container">
             <span class="keyboard-key">K</span>
           </span>
-          <span @touchend="keyDown('l')" class="keyboard-key-container x175">
+          <span @touchend="tapKey" data-key="l" class="keyboard-key-container x175">
             <span class="keyboard-key">L</span>
           </span>
         </div>
         <div class="keyboard-row">
-          <span @touchend="keyDown('z')" class="keyboard-key-container x15">
+          <span @touchend="tapKey" data-key="z" class="keyboard-key-container x15">
             <span class="keyboard-key">Z</span>
           </span>
-          <span @touchend="keyDown('x')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="x" class="keyboard-key-container">
             <span class="keyboard-key">X</span>
           </span>
-          <span @touchend="keyDown('c')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="c" class="keyboard-key-container">
             <span class="keyboard-key">C</span>
           </span>
-          <span @touchend="keyDown('v')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="v" class="keyboard-key-container">
             <span class="keyboard-key">V</span>
           </span>
-          <span @touchend="keyDown('b')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="b" class="keyboard-key-container">
             <span class="keyboard-key">B</span>
           </span>
-          <span @touchend="keyDown('n')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="n" class="keyboard-key-container">
             <span class="keyboard-key">N</span>
           </span>
-          <span @touchend="keyDown('m')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="m" class="keyboard-key-container">
             <span class="keyboard-key">M</span>
           </span>
-          <span @touchend="keyDown('-')" class="keyboard-key-container">
+          <span @touchend="tapKey" data-key="-" class="keyboard-key-container">
             <span class="keyboard-key">ー</span>
           </span>
-          <span @touchend="keyDown('Backspace')" class="keyboard-key-container x125">
+          <span @touchend="tapKey" data-key="Backspace" class="keyboard-key-container x125">
             <span class="keyboard-key special">⇐</span>
           </span>
         </div>
