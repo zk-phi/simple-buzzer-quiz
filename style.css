@@ -197,6 +197,10 @@ hr {
   line-height: 1;
 }
 
+.pending-input {
+  text-decoration: underline dotted;
+}
+
 .progress {
   height: 4px;
   flex-grow: 1;
