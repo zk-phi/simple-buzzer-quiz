@@ -4,17 +4,15 @@ const BS_PENALTY    = 200; /* msec */
 const PIE_DASHARRAY = 63;
 const IS_TOUCH = "ontouchstart" in window;
 
-/* DESTRUCTIVE: Shuffle an array. */
-const shuffleArray = (array) => {
+function shuffleArray (array) {
   for (var i = array.length - 1; i > 0; i--) {
     var r = Math.floor(Math.random() * (i + 1));
     var tmp = array[i];
     array[i] = array[r];
     array[r] = tmp;
   }
-};
+}
 
-/* () => Promise<Problems> */
 const loadProblems = () => (
   new Promise((resolve, reject) => {
     const match = location.href.match(/\?(.+)$/);
@@ -193,6 +191,9 @@ const vm = new Vue({
     },
     stopProblem: function () {
       this.playAudio(SOUNDS.ANSWER);
+      this.startInput();
+    },
+    startInput: function () {
       this.playAudio(SOUNDS.TIMER);
       this.inputTimer = INPUT_TIMER;
       this.alphaInput = "";
