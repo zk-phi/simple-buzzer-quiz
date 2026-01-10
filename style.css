@@ -294,6 +294,7 @@ hr {
   background: white;
   border-radius: 2vw;
   box-shadow: 0 0.3vw grey;
+  transition: all 0.2s;
 }
 
 .keyboard-key.special {
