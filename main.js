@@ -1,5 +1,5 @@
 const TICK_INTERVAL = 125; /* msec */
-const INPUT_TIMER   = 5999; /* msec */
+const INPUT_TIMER   = 6000; /* msec */
 const BS_PENALTY    = 200; /* msec */
 const PIE_DASHARRAY = 63;
 const IS_TOUCH = "ontouchstart" in window;
@@ -117,8 +117,11 @@ const vm = new Vue({
       );
     },
     pieStyle: function () {
+      if (this.inputTimer > 3000) {
+        return { display: "none" };
+      }
       // https://zenn.dev/perokichi/articles/21df4852a9b25f
-      const p = Math.max(0, this.inputTimer - 1000) / Math.max(INPUT_TIMER - 1000);
+      const p = Math.max(0, this.inputTimer) / 3000;
       return {
         strokeDasharray: PIE_DASHARRAY,
         strokeDashoffset: PIE_DASHARRAY + PIE_DASHARRAY * p,
