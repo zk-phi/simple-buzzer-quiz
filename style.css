@@ -252,7 +252,7 @@ hr {
 }
 
 .keyboard-preview {
-  padding: calc(var(--keyboard-key-margin) / 2);
+  padding: calc(var(--keyboard-key-margin) / 2) calc(var(--keyboard-key-margin) / 2) 0;
 }
 
 .keyboard-row {
