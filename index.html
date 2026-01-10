@@ -300,6 +300,10 @@ gtag('config', 'G-6JKK39903G');
       </div>
 
       <div v-if="IS_TOUCH && state === STATES.INPUT" class="keyboard">
+        <div class="keyboard-preview">
+          <div><span class="label">英数</span> {{ alphaInput }}|</div>
+          <div><span class="label">かな</span> {{ kanaInput[0] }}{{ kanaInput[1] }}|</div>
+        </div>
         <div class="keyboard-row">
           <span @touchend="tapKey" data-key="1" class="keyboard-key-container x0975">
             <span class="keyboard-key">1</span>
