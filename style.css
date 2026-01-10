@@ -297,7 +297,14 @@ hr {
 }
 
 .keyboard-key.special {
-  background: #aaa;
+  background: lightgray;
+}
+
+.keyboard-key:active {
+  background: dimgray;
+  color: white;
+  transform: translateY(0.3vw);
+  box-shadow: none;
 }
 
 .keyboard-key.spacer {
