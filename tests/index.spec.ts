@@ -11,15 +11,20 @@ const virtualKeyboardPress = async (page, key) => {
   await page.locator(`[data-key=${key}]`).tap();
 }
 
-test("問題とアセットが正しくロードされる", async ({ page }) => {
+test.beforeEach(async ({ page }) => {
+  // opt-out google analytics
+  await page.addInitScript(() => window["ga-disable-G-6JKK39903G"] = true);
   await page.goto("/");
-  await expect(page.locator("h2")).toHaveText("サンプル問題");
   await expect(page.locator("#status")).toHaveText(/スタート/);
+  // disable sound
+  await page.locator("input[type=checkbox]").click();
+});
+
+test("問題とアセットが正しくロードされる", async ({ page }) => {
+  await expect(page.locator("h2")).toHaveText("サンプル問題");
 });
 
 test("Space or スタートボタンでゲームが開始する", async ({ page, isMobile }) => {
-  await page.goto("/");
-  await page.locator("input[type=checkbox]").click(); // disable sound
   if (isMobile) {
     await expect(page.locator("#status")).toHaveText("スタート");
     await page.locator("#status").click();
@@ -31,10 +36,8 @@ test("Space or スタートボタンでゲームが開始する", async ({ page,
 });
 
 test("問題が少しずつ読まれ、読み切ると解答モードに移行する", async ({ page, isMobile }) => {
-  await page.goto("/");
-  await expect(page.locator("#status")).toHaveText(/スタート/);
-  await page.locator("input[type=checkbox]").click(); // disable sound
   await page.keyboard.press(" ");
+  // 問題が少しずつ読まれる
   await page.waitForTimeout(500);
   const problem1 = await page.locator(".hidden").innerHTML();
   await page.waitForTimeout(3000);
@@ -49,9 +52,6 @@ test("問題が少しずつ読まれ、読み切ると解答モードに移行�
 });
 
 test("Space または画面タップで解答モードに移行する", async ({ page, isMobile }) => {
-  await page.goto("/");
-  await expect(page.locator("#status")).toHaveText(/スタート/);
-  await page.locator("input[type=checkbox]").click(); // disable sound
   await page.keyboard.press(" ");
   if (isMobile) {
     await page.locator("#app").tap();
@@ -62,9 +62,6 @@ test("Space または画面タップで解答モードに移行する", async ({
 });
 
 test("キーボードから英数で解答を入力して正解する", async ({ page, isMobile }) => {
-  await page.goto("/");
-  await expect(page.locator("#status")).toHaveText(/スタート/);
-  await page.locator("input[type=checkbox]").click(); // disable sound
   await page.keyboard.press(" ");
   await page.keyboard.press(" ");
   if (isMobile) {
@@ -76,9 +73,6 @@ test("キーボードから英数で解答を入力して正解する", async ({
 });
 
 test("キーボードからローマ字で解答を入力して正解する", async ({ page, isMobile }) => {
-  await page.goto("/");
-  await expect(page.locator("#status")).toHaveText(/スタート/);
-  await page.locator("input[type=checkbox]").click(); // disable sound
   await page.keyboard.press(" ");
   await page.keyboard.press(" ");
   if (isMobile) {
@@ -90,9 +84,6 @@ test("キーボードからローマ字で解答を入力して正解する", as
 });
 
 test("Backspace で解答を訂正できる", async ({ page, isMobile }) => {
-  await page.goto("/");
-  await expect(page.locator("#status")).toHaveText(/スタート/);
-  await page.locator("input[type=checkbox]").click(); // disable sound
   await page.keyboard.press(" ");
   await page.keyboard.press(" ");
   if (isMobile) {
@@ -112,9 +103,6 @@ test("Backspace で解答を訂正できる", async ({ page, isMobile }) => {
 });
 
 test("約６秒放置で誤答になる", async ({ page, isMobile }) => {
-  await page.goto("/");
-  await expect(page.locator("#status")).toHaveText(/スタート/);
-  await page.locator("input[type=checkbox]").click(); // disable sound
   await page.keyboard.press(" ");
   await page.keyboard.press(" ");
   await page.waitForTimeout(6100);
@@ -122,9 +110,6 @@ test("約６秒放置で誤答になる", async ({ page, isMobile }) => {
 });
 
 test("全問終了でリザルト画面になる", async ({ page, isMobile }) => {
-  await page.goto("/");
-  await expect(page.locator("#status")).toHaveText(/スタート/);
-  await page.locator("input[type=checkbox]").click(); // disable sound
   await page.keyboard.press(" ");
   await page.keyboard.press(" ");
   await page.keyboard.type("eberesuto");
