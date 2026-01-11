@@ -1,5 +1,5 @@
 const TICK_INTERVAL = 125; /* msec */
-const INPUT_TIMER   = 6000; /* msec */
+const INPUT_TIMER   = 5999; /* msec */
 const BS_PENALTY    = 200; /* msec */
 const PIE_DASHARRAY = 63;
 const IS_TOUCH = "ontouchstart" in window;
@@ -116,16 +116,23 @@ const vm = new Vue({
         `linear-gradient(to right,#edad0b 0%,#edad0b 50%,${c} 50%,${c} ${p}%,#fff ${p}%)`
       );
     },
-    pieStyle: function () {
+    pie: function () {
       const max = this.inputTimerHistory.length === 0 ? INPUT_TIMER - 1000 : 3000;
-      if (this.inputTimer - 1000 > max) {
-        return { display: "none" }
+      const userInputTimer = Math.max(0, this.inputTimer - 1000);
+      if (userInputTimer > max) {
+        return {
+          style: { display: "none" },
+          text: "",
+        };
       }
       // https://zenn.dev/perokichi/articles/21df4852a9b25f
-      const p = Math.max(0, this.inputTimer - 1000) / max;
+      const p = userInputTimer / max;
       return {
-        strokeDasharray: PIE_DASHARRAY,
-        strokeDashoffset: PIE_DASHARRAY + PIE_DASHARRAY * p,
+        style: {
+          strokeDasharray: PIE_DASHARRAY,
+          strokeDashoffset: PIE_DASHARRAY + PIE_DASHARRAY * p,
+        },
+        text: `${Math.ceil(userInputTimer / 1000)}`,
       };
     },
   },
