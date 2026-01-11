@@ -117,11 +117,12 @@ const vm = new Vue({
       );
     },
     pieStyle: function () {
-      if (this.inputTimer > 3000) {
-        return { display: "none" };
+      const max = this.inputTimerHistory.length === 0 ? INPUT_TIMER - 1000 : 3000;
+      if (this.inputTimer - 1000 > max) {
+        return { display: "none" }
       }
       // https://zenn.dev/perokichi/articles/21df4852a9b25f
-      const p = Math.max(0, this.inputTimer) / 3000;
+      const p = Math.max(0, this.inputTimer - 1000) / max;
       return {
         strokeDasharray: PIE_DASHARRAY,
         strokeDashoffset: PIE_DASHARRAY + PIE_DASHARRAY * p,
