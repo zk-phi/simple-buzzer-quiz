@@ -7,7 +7,7 @@ jobs:
   e2e-test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v6
       - uses: actions/setup-node@v3.6.0
       - run: yarn install
       - run: yarn playwright install --with-deps
